@@ -18,17 +18,37 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Fungsi untuk memulai bot dan menampilkan kategori
 def start(update: Update, context: CallbackContext) -> None:
+    chat_type = update.message.chat.type
+
+    if chat_type != 'private':
+        # Kalau /start diketik di grup, arahkan ke private chat
+        bot_username = context.bot.username
+        keyboard = [[
+            InlineKeyboardButton("Mulai", url=f"https://t.me/{bot_username}?start=menu")
+        ]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        update.message.reply_text(
+            "\nʚ ═══･୨ BOT ORDER ୧･═══ ɞ\n\nHai! Untuk Melihat harga terbaru dan order 24 jam, \nSilakan klik tombol di bawah:\n",
+            reply_markup=reply_markup
+        )
+        return
+
+    # Kalau /start diketik di private chat, lanjut tampilkan kategori
     produk = supabase.table("products").select("*").execute().data
     kategori_list = {item['kategori'] for item in produk}  # Set untuk menghilangkan duplikat
     
-    # Buat tombol inline untuk kategori
     keyboard = [[InlineKeyboardButton(kategori, callback_data=f"kategori:{kategori}")] for kategori in kategori_list]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
-    update.message.reply_text("<b>Selamat datang!</b>\nIni adalah layanan bot order dari @arsylastoree\nJika ada yang ingin ditanyakan bisa langsung hubungi admin.\nAdmin : @aanhendri\n\n<b>Silahkan Pilih Kategori:</b>",
-    reply_markup=reply_markup,
-    parse_mode=ParseMode.HTML
+    update.message.reply_text(
+        "<b>Selamat datang!</b>\nIni adalah layanan bot order dari @arsylastoree\n"
+        "Jika ada yang ingin ditanyakan bisa langsung hubungi admin.\nAdmin : @aanhendri\n\n"
+        "<b>Silahkan Pilih Kategori:</b>",
+        reply_markup=reply_markup,
+        parse_mode=ParseMode.HTML
     )
+
 
 # Fungsi untuk menangani pilihan kategori
 def kategori_handler(update: Update, context: CallbackContext) -> None:

@@ -193,7 +193,7 @@ def durasi_handler(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton("Dana", callback_data=f"payment:dana:{harga_terpilih}"),
          InlineKeyboardButton("GoPay", callback_data=f"payment:gopay:{harga_terpilih}")],
-        [InlineKeyboardButton("QRIS", callback_data=f"payment:qris:{harga_terpilih}")],
+        
         [InlineKeyboardButton("Kembali", callback_data=f"back:durasi:{layanan_terpilih}:{paket_terpilih}")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)

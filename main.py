@@ -39,6 +39,8 @@ def start(update: Update, context: CallbackContext) -> None:
     kategori_list = {item['kategori'] for item in produk}  # Set untuk menghilangkan duplikat
     
     keyboard = [[InlineKeyboardButton(kategori, callback_data=f"kategori:{kategori}")] for kategori in kategori_list]
+    # Tambahkan tombol tambahan di bawah tombol kategori
+    keyboard.append([InlineKeyboardButton("SOSIAL MEDIA BOOSTER", url="https://t.me/SosmedBoster_bot?start=menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     update.message.reply_text(
